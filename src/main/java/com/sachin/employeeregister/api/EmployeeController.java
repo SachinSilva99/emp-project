@@ -21,8 +21,7 @@ public class EmployeeController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void saveEmp(@RequestBody EmployeeRequestDTO dto) {
         try {
-            EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
-            employeeService.createEmployee(employeeDTO);
+            employeeService.createEmployee(dto);
             ResponseEntity.ok();
         } catch (DuplicateException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package com.sachin.employeeregister.service.impl;
 
 
 import com.sachin.employeeregister.dto.EmployeeDTO;
+import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
 import com.sachin.employeeregister.entity.Employee;
 import com.sachin.employeeregister.repo.ConstraintViolationException;
 import com.sachin.employeeregister.repo.custom.EmployeeRepo;
@@ -34,13 +35,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void createEmployee(EmployeeDTO employeeDTO) throws DuplicateException {
+    public void createEmployee(EmployeeRequestDTO dto) throws DuplicateException {
+        EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
+
         Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
+
         boolean existByPk = employeeRepo.existByPk(employeeDTO.getId(), session);
         if (existByPk) {
             throw new DuplicateException(employeeDTO.getId() + employeeDTO.getName() + " already exists");
         }
+
         try {
             System.out.println(employeeDTO);
             employeeRepo.save(employeeMapper.toEmployee(employeeDTO), session);
