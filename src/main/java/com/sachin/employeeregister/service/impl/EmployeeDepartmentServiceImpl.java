@@ -9,6 +9,8 @@ import com.sachin.employeeregister.repo.custom.DepartmentRepo;
 import com.sachin.employeeregister.repo.custom.EmployeeRepo;
 import com.sachin.employeeregister.service.EmployeeDepartmentService;
 import com.sachin.employeeregister.util.FactoryConfiguration;
+import com.sachin.employeeregister.util.mapper.DepartmentMapper;
+import com.sachin.employeeregister.util.mapper.EmployeeMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,10 @@ public class EmployeeDepartmentServiceImpl implements EmployeeDepartmentService 
     private DepartmentRepo departmentRepo;
 
 
-
+    @Autowired
+    private EmployeeMapper employeeMapper;
+    @Autowired
+    private DepartmentMapper departmentMapper;
 
 
     @Autowired
@@ -32,7 +37,7 @@ public class EmployeeDepartmentServiceImpl implements EmployeeDepartmentService 
 
     @Override
     public void saveEmployeeWithDepartment(EmployeeDTO employeeDTO, DepartmentDTO departmentDTO) {
-      /*  Session session = factoryConfiguration.getSession();
+        Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
 
         try {
@@ -47,12 +52,12 @@ public class EmployeeDepartmentServiceImpl implements EmployeeDepartmentService 
             throw new RuntimeException(e);
         } finally {
             session.close();
-        }*/
+        }
     }
 
     @Override
     public void updateEmployeeWithDepartment(EmployeeDTO employeeDTO, DepartmentDTO departmentDTO) {
-        /*Session session = factoryConfiguration.getSession();
+        Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
 
         try {
@@ -67,6 +72,6 @@ public class EmployeeDepartmentServiceImpl implements EmployeeDepartmentService 
             throw new RuntimeException(e);
         } finally {
             session.close();
-        }*/
+        }
     }
 }
