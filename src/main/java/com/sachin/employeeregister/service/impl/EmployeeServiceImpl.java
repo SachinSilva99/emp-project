@@ -1,17 +1,21 @@
 package com.sachin.employeeregister.service.impl;
 
 
+import com.sachin.employeeregister.dto.DepartmentDTO;
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
 import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
+import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.entity.Employee;
 import com.sachin.employeeregister.repo.ConstraintViolationException;
+import com.sachin.employeeregister.repo.custom.DepartmentRepo;
 import com.sachin.employeeregister.repo.custom.EmployeeRepo;
 import com.sachin.employeeregister.service.EmployeeService;
 import com.sachin.employeeregister.service.exception.DuplicateException;
 import com.sachin.employeeregister.service.exception.NotFoundException;
 import com.sachin.employeeregister.service.exception.UpdateFailedException;
 import com.sachin.employeeregister.util.FactoryConfiguration;
+import com.sachin.employeeregister.util.mapper.DepartmentMapper;
 import com.sachin.employeeregister.util.mapper.EmployeeMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -32,7 +36,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeMapper employeeMapper;
 
     @Autowired
+    private DepartmentMapper departmentMapper;
+    @Autowired
     private FactoryConfiguration factoryConfiguration;
+    @Autowired
+    private DepartmentRepo departmentRepo;
 
 
     @Override
@@ -61,13 +69,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
     @Override
     public void updateEmployee(EmployeeRequestDTO dto, String id, Long departmentId) throws UpdateFailedException {
+        Session session = factoryConfiguration.getSession();
 
         EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
+
+        if (departmentId != null) {
+            Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
+            if (byPk.isPresent()) {
+                System.out.println("employee has a dep");
+                Department department = byPk.get();
+                DepartmentDTO departmentDto = departmentMapper.toDepartmentDto(department);
+                employeeDTO.setDepartmentDTO(departmentDto);
+            }
+        }
         System.out.println(departmentId == null);
-        Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
 
         Optional<Employee> existByPk = employeeRepo.findByPk(employeeDTO.getId(), session);
