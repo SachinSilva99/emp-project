@@ -2,6 +2,7 @@ package com.sachin.employeeregister.util.mapper.impl;
 
 import com.sachin.employeeregister.dto.DepartmentDTO;
 import com.sachin.employeeregister.dto.EmployeeDTO;
+import com.sachin.employeeregister.dto.response.DepartmentResponseDTO;
 import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.util.mapper.DepartmentMapper;
 import com.sachin.employeeregister.util.mapper.EmployeeMapper;
@@ -22,6 +23,17 @@ public class DepartmentMapperImpl implements DepartmentMapper {
             departmentDTO.setEmployeeDTO(employeeMapper.toEmployeeDto(dp.getEmployee()));
         }
         return departmentDTO;
+    }
+
+    @Override
+    public DepartmentResponseDTO toDepartmentResponseDto(Department department) {
+        DepartmentResponseDTO departmentResponseDTO = new DepartmentResponseDTO();
+        department.setId(department.getId());
+        department.setName(department.getName());
+        if (department.getEmployee()!=null) {
+            department.setEmployee(department.getEmployee());
+        }
+        return departmentResponseDTO;
     }
 
     @Override

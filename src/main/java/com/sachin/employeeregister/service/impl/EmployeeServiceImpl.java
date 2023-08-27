@@ -3,6 +3,7 @@ package com.sachin.employeeregister.service.impl;
 
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
+import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
 import com.sachin.employeeregister.entity.Employee;
 import com.sachin.employeeregister.repo.ConstraintViolationException;
 import com.sachin.employeeregister.repo.custom.EmployeeRepo;
@@ -60,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO, Long id) throws UpdateFailedException {
+    public EmployeeResponseDTO updateEmployee(EmployeeDTO employeeDTO, Long id) throws UpdateFailedException {
         Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
 
@@ -77,7 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setDepartment(employee.getDepartment());
             employeeRepo.update(employee, session);
             transaction.commit();
-            return employeeMapper.toEmployeeDto(employee);
+            return employeeMapper.toEmployeeResponseDto(employee);
         } catch (Exception e) {
             transaction.rollback();
             throw new UpdateFailedException(employeeDTO + " failed to update");
@@ -87,11 +88,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<EmployeeDTO> getEmployee(String id) {
+    public Optional<EmployeeResponseDTO> getEmployee(String id) {
         Session session = factoryConfiguration.getSession();
         Optional<Employee> byPk = employeeRepo.findByPk(id, session);
         session.close();
-        return byPk.map(employee -> employeeMapper.toEmployeeDto(employee));
+        return byPk.map(employee -> employeeMapper.toEmployeeResponseDto(employee));
     }
 
     @Override
@@ -115,11 +116,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmployees() {
+    public List<EmployeeResponseDTO> getAllEmployees() {
         Session session = factoryConfiguration.getSession();
-        List<EmployeeDTO> employeeDTOS = employeeRepo.findAll(session)
+        List<EmployeeResponseDTO> employeeDTOS = employeeRepo.findAll(session)
                 .stream()
-                .map(employee -> employeeMapper.toEmployeeDto(employee))
+                .map(employee -> employeeMapper.toEmployeeResponseDto(employee))
                 .collect(Collectors.toList());
         session.close();
         return employeeDTOS;
