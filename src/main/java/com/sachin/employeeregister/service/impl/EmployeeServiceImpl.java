@@ -42,10 +42,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new DuplicateException(employeeDTO.getId() + employeeDTO.getName() + " already exists");
         }
         try {
+            System.out.println(employeeDTO);
             employeeRepo.save(employeeMapper.toEmployee(employeeDTO), session);
             transaction.commit();
-            session.close();
+            System.out.println("saved");
         } catch (Exception e) {
+            e.printStackTrace();
             transaction.rollback();
         } finally {
             session.close();

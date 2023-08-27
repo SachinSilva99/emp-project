@@ -14,23 +14,27 @@ public class EmployeeMapperImpl implements EmployeeMapper {
 
     @Override
     public EmployeeDTO toEmployeeDto(Employee emp) {
-        return new EmployeeDTO(
-                emp.getId(),
-                emp.getName(),
-                emp.getEmail(),
-                emp.getProfile(),
-                departmentMapper.toDepartmentDto(emp.getDepartment())
-        );
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(emp.getId());
+        employeeDTO.setName(emp.getName());
+        employeeDTO.setEmail(emp.getEmail());
+        employeeDTO.setProfile(emp.getProfile());
+        if (emp.getDepartment() != null) {
+            employeeDTO.setDepartmentDTO(departmentMapper.toDepartmentDto(emp.getDepartment()));
+        }
+        return employeeDTO;
     }
 
     @Override
     public Employee toEmployee(EmployeeDTO empDto) {
-        return new Employee(
-                empDto.getId(),
-                empDto.getName(),
-                empDto.getEmail(),
-                empDto.getProfile(),
-                departmentMapper.toDepartment(empDto.getDepartmentDTO())
-        );
+        Employee employee = new Employee();
+        employee.setId(empDto.getId());
+        employee.setName(empDto.getName());
+        employee.setEmail(empDto.getEmail());
+        employee.setProfile(empDto.getProfile());
+        if (empDto.getDepartmentDTO() != null) {
+            employee.setDepartment(departmentMapper.toDepartment(empDto.getDepartmentDTO()));
+        }
+        return employee;
     }
 }

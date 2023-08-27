@@ -1,6 +1,7 @@
 package com.sachin.employeeregister.util.mapper.impl;
 
 import com.sachin.employeeregister.dto.DepartmentDTO;
+import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.util.mapper.DepartmentMapper;
 import com.sachin.employeeregister.util.mapper.EmployeeMapper;
@@ -13,12 +14,24 @@ public class DepartmentMapperImpl implements DepartmentMapper {
     private EmployeeMapper employeeMapper;
 
     @Override
-    public DepartmentDTO toDepartmentDto(Department department) {
-        return new DepartmentDTO(department.getId(), department.getName(), employeeMapper.toEmployeeDto(department.getEmployee()));
+    public DepartmentDTO toDepartmentDto(Department dp) {
+        DepartmentDTO departmentDTO = new DepartmentDTO();
+        departmentDTO.setId(departmentDTO.getId());
+        departmentDTO.setName(dp.getName());
+        if (dp.getEmployee() != null) {
+            departmentDTO.setEmployeeDTO(employeeMapper.toEmployeeDto(dp.getEmployee()));
+        }
+        return departmentDTO;
     }
 
     @Override
     public Department toDepartment(DepartmentDTO departmentDTO) {
-        return new Department(departmentDTO.getId(), departmentDTO.getName(), employeeMapper.toEmployee(departmentDTO.getEmployeeDTO()));
+        Department department = new Department();
+        department.setId(departmentDTO.getId());
+        department.setName(departmentDTO.getName());
+        if (departmentDTO.getEmployeeDTO() != null) {
+            department.setEmployee(employeeMapper.toEmployee(departmentDTO.getEmployeeDTO()));
+        }
+        return department;
     }
 }
