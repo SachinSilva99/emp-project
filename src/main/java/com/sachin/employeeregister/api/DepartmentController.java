@@ -17,6 +17,6 @@ public class DepartmentController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createDepartment(@RequestBody DepartmentRequestDTO departmentRequestDTO){
-
+        departmentService.createDepartment(departmentRequestDTO);
     }
 }
