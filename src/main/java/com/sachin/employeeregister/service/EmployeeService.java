@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface EmployeeService {
     void createEmployee(EmployeeRequestDTO employeeRequestDTO);
 
-    EmployeeResponseDTO updateEmployee(EmployeeDTO employeeDTO, Long id) throws UpdateFailedException;
+    void updateEmployee(EmployeeRequestDTO employeeDTO, String id, Long departmentId) throws UpdateFailedException;
 
     Optional<EmployeeResponseDTO> getEmployee(String id);
 

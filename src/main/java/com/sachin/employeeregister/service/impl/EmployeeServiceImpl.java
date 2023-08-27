@@ -60,8 +60,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
+
+
     @Override
-    public EmployeeResponseDTO updateEmployee(EmployeeDTO employeeDTO, Long id) throws UpdateFailedException {
+    public void updateEmployee(EmployeeRequestDTO dto, String id, Long departmentId) throws UpdateFailedException {
+
+        EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
+        System.out.println(departmentId == null);
         Session session = factoryConfiguration.getSession();
         Transaction transaction = session.beginTransaction();
 
@@ -71,14 +76,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         try {
+            Employee updatedEmp = employeeMapper.toEmployee(employeeDTO);
             Employee employee = existByPk.get();
-            employee.setName(employee.getName());
-            employee.setEmail(employee.getEmail());
-            employee.setProfile(employee.getProfile());
-            employee.setDepartment(employee.getDepartment());
+            employee.setName(updatedEmp.getName());
+            employee.setEmail(updatedEmp.getEmail());
+            employee.setProfile(updatedEmp.getProfile());
+            employee.setDepartment(updatedEmp.getDepartment());
             employeeRepo.update(employee, session);
             transaction.commit();
-            return employeeMapper.toEmployeeResponseDto(employee);
+            employeeMapper.toEmployeeResponseDto(employee);
         } catch (Exception e) {
             transaction.rollback();
             throw new UpdateFailedException(employeeDTO + " failed to update");
