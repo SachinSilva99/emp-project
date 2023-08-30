@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -20,9 +22,19 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void saveEmp(@RequestBody EmployeeRequestDTO dto) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void saveEmp(
+            @RequestPart String id,
+            @RequestPart String name,
+            @RequestPart String email,
+            @RequestPart byte[] profile
+    ) {
         try {
+            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
+            // Decode the base64 profile data
+
+            String encodedString = Base64.getEncoder().encodeToString(profile);
+            System.out.println(encodedString);
             employeeService.createEmployee(dto);
             ResponseEntity.ok();
         } catch (DuplicateException e) {

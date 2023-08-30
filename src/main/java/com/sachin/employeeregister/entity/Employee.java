@@ -21,6 +21,7 @@ public class Employee implements SuperEntity {
     @Column(nullable = false)
     private String email;
 
+    @Lob
     @Column
     private byte[] profile;
 
