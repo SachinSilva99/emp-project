@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "department")
-public class Department implements  SuperEntity {
+public class Department implements SuperEntity {
     @Id
     private Long id;
-
     @Column(nullable = false)
     private String name;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Employee employee;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Employee> employeeList = new ArrayList<>();
 }

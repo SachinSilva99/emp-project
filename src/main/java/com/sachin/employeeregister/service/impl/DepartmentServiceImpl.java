@@ -69,7 +69,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             Department updatedDep = departmentMapper.toDepartment(departmentDTO);
 
             Department department = existByPk.get();
-            department.setEmployee(updatedDep.getEmployee());
+            department.setEmployeeList(updatedDep.getEmployeeList());
             department.setName(updatedDep.getName());
 
             departmentRepo.update(department, session);

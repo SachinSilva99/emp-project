@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class DepartmentResponseDTO {
     private Long id;
     private String name;
-    private EmployeeDTO employeeDTO;
+    private List<EmployeeDTO> employeeDTOS;
 }

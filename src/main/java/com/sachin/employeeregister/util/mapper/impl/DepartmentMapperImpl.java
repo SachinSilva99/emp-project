@@ -1,13 +1,14 @@
 package com.sachin.employeeregister.util.mapper.impl;
 
 import com.sachin.employeeregister.dto.DepartmentDTO;
-import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.response.DepartmentResponseDTO;
 import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.util.mapper.DepartmentMapper;
 import com.sachin.employeeregister.util.mapper.EmployeeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class DepartmentMapperImpl implements DepartmentMapper {
@@ -19,8 +20,13 @@ public class DepartmentMapperImpl implements DepartmentMapper {
         DepartmentDTO departmentDTO = new DepartmentDTO();
         departmentDTO.setId(departmentDTO.getId());
         departmentDTO.setName(dp.getName());
-        if (dp.getEmployee() != null) {
-            departmentDTO.setEmployeeDTO(employeeMapper.toEmployeeDto(dp.getEmployee()));
+        if (dp.getEmployeeList() != null) {
+            departmentDTO.setEmployeeDTOS(
+                    dp.getEmployeeList()
+                            .stream()
+                            .map(employee -> employeeMapper.toEmployeeDto(employee))
+                            .collect(Collectors.toList())
+            );
         }
         return departmentDTO;
     }
@@ -30,8 +36,8 @@ public class DepartmentMapperImpl implements DepartmentMapper {
         DepartmentResponseDTO departmentResponseDTO = new DepartmentResponseDTO();
         department.setId(department.getId());
         department.setName(department.getName());
-        if (department.getEmployee()!=null) {
-            department.setEmployee(department.getEmployee());
+        if (department.getEmployeeList() != null) {
+            department.setEmployeeList(department.getEmployeeList());
         }
         return departmentResponseDTO;
     }
@@ -41,8 +47,11 @@ public class DepartmentMapperImpl implements DepartmentMapper {
         Department department = new Department();
         department.setId(departmentDTO.getId());
         department.setName(departmentDTO.getName());
-        if (departmentDTO.getEmployeeDTO() != null) {
-            department.setEmployee(employeeMapper.toEmployee(departmentDTO.getEmployeeDTO()));
+        if (departmentDTO.getEmployeeDTOS() != null) {
+            department.setEmployeeList(
+                    departmentDTO.getEmployeeDTOS()
+                            .stream().map(employeeDTO -> employeeMapper.toEmployee(employeeDTO))
+                            .collect(Collectors.toList()));
         }
         return department;
     }

@@ -25,6 +25,6 @@ public class Employee implements SuperEntity {
     @Column
     private byte[] profile;
 
-    @OneToOne(mappedBy = "employee")
+    @ManyToOne
     private Department department;
 }

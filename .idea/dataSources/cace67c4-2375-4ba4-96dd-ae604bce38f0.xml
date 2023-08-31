@@ -1008,8 +1008,8 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </schema>
     <schema id="292" parent="1" name="emp">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-08-30.17:18:33</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-08-30.06:18:33</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-09-01.03:54:50</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-08-31.16:54:50</LocalIntrospectionTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <user id="293" parent="1" name="mysql.infoschema">
@@ -1035,68 +1035,104 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="298" parent="292" name="employee">
+    <table id="298" parent="292" name="department_employee">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <column id="299" parent="297" name="id">
+    <table id="299" parent="292" name="employee">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <column id="300" parent="297" name="id">
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="300" parent="297" name="name">
+    <column id="301" parent="297" name="name">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="301" parent="297" name="employee_id">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <foreign-key id="302" parent="297" name="FKr45epddmrka0nkg3fkqcj28r4">
-      <ColNames>employee_id</ColNames>
-      <RefColNames>id</RefColNames>
-      <RefTableName>employee</RefTableName>
-    </foreign-key>
-    <index id="303" parent="297" name="PRIMARY">
+    <index id="302" parent="297" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="304" parent="297" name="FKr45epddmrka0nkg3fkqcj28r4">
-      <ColNames>employee_id</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="305" parent="297" name="PRIMARY">
+    <key id="303" parent="297" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="306" parent="298" name="id">
-      <DasType>varchar(255)|0s</DasType>
+    <column id="304" parent="298" name="Department_id">
+      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="307" parent="298" name="email">
+    <column id="305" parent="298" name="employeeList_id">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="308" parent="298" name="name">
+    <foreign-key id="306" parent="298" name="FKp91nu3pewewohgygc5p7pxxem">
+      <ColNames>Department_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>department</RefTableName>
+    </foreign-key>
+    <foreign-key id="307" parent="298" name="FK22lvvnoyhwffto4x817swe761">
+      <ColNames>employeeList_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>employee</RefTableName>
+    </foreign-key>
+    <index id="308" parent="298" name="UK_gh6a42m015y9ynyn9y0pfkiyi">
+      <ColNames>employeeList_id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="309" parent="298" name="FKp91nu3pewewohgygc5p7pxxem">
+      <ColNames>Department_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="310" parent="298" name="UK_gh6a42m015y9ynyn9y0pfkiyi">
+      <UnderlyingIndexName>UK_gh6a42m015y9ynyn9y0pfkiyi</UnderlyingIndexName>
+    </key>
+    <column id="311" parent="299" name="id">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="312" parent="299" name="email">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="313" parent="299" name="name">
       <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="309" parent="298" name="profile">
+    <column id="314" parent="299" name="profile">
       <DasType>longblob|0s</DasType>
       <Position>4</Position>
     </column>
-    <index id="310" parent="298" name="PRIMARY">
+    <column id="315" parent="299" name="department_id">
+      <DasType>bigint|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <foreign-key id="316" parent="299" name="FKbejtwvg9bxus2mffsm3swj3u9">
+      <ColNames>department_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>department</RefTableName>
+    </foreign-key>
+    <index id="317" parent="299" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="311" parent="298" name="PRIMARY">
+    <index id="318" parent="299" name="FKbejtwvg9bxus2mffsm3swj3u9">
+      <ColNames>department_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="319" parent="299" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>

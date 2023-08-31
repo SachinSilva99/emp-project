@@ -23,23 +23,23 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> saveEmp(
+    @PostMapping(value = {"", "/{departmentId}"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> createEmployee(
             @RequestPart String id,
             @RequestPart String name,
             @RequestPart String email,
-            @RequestPart byte[] profile
-    ) {
+            @RequestPart(required = false) byte[] profile,
+            @PathVariable(required = false) Long departmentId) {
         try {
             EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
-            employeeService.createEmployee(dto);
+            employeeService.createEmployee(dto, departmentId);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {
             return new ResponseEntity<>(id + " employee Already exists", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping(value = {"/", "/{departmentId}"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = {"", "/{departmentId}"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateEmployee(
             @RequestPart String id,
             @RequestPart String name,

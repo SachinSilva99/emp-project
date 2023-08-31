@@ -1,7 +1,6 @@
 package com.sachin.employeeregister.service.impl;
 
 
-import com.sachin.employeeregister.dto.DepartmentDTO;
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
 import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
@@ -44,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void createEmployee(EmployeeRequestDTO dto) throws DuplicateException {
+    public void createEmployee(EmployeeRequestDTO dto, Long departmentId) throws DuplicateException {
         EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
 
         Session session = factoryConfiguration.getSession();
@@ -54,14 +53,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (existByPk) {
             throw new DuplicateException(employeeDTO.getId() + employeeDTO.getName() + " already exists");
         }
-
+        Employee employee = employeeMapper.toEmployee(employeeDTO);
+        if (departmentId != null) {
+            Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
+            if (byPk.isEmpty()) {
+                throw new NotFoundException("department id " + departmentId);
+            }
+            Department department = byPk.get();
+            department.getEmployeeList().add(employee);
+            employee.setDepartment(department);
+            departmentRepo.update(department, session);
+        }
         try {
             System.out.println(employeeDTO);
-            employeeRepo.save(employeeMapper.toEmployee(employeeDTO), session);
+            employeeRepo.save(employee, session);
             transaction.commit();
-            System.out.println("saved");
         } catch (Exception e) {
-            e.printStackTrace();
             transaction.rollback();
         } finally {
             session.close();
@@ -127,7 +134,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         } finally {
             session.close();
         }
-
     }
 
     @Override
