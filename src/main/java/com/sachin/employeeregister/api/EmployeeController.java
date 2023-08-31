@@ -32,6 +32,7 @@ public class EmployeeController {
             @PathVariable(required = false) Long departmentId) {
         try {
             EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
+            System.out.println(departmentId);
             employeeService.createEmployee(dto, departmentId);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {
@@ -85,14 +86,9 @@ public class EmployeeController {
             employeeService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ConstraintViolationException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("employee in use ",HttpStatus.CONFLICT);
+            return new ResponseEntity<>("employee in use ", HttpStatus.CONFLICT);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
     }
 }

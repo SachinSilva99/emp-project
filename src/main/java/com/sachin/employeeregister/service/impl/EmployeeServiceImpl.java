@@ -94,7 +94,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             if (departmentId != null) {
                 Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
-                byPk.ifPresent(employee::setDepartment);
+                if (byPk.isEmpty()) {
+                    throw new NotFoundException(departmentId + "not found");
+                }
+                Department department = byPk.get();
+                employee.setDepartment(department);
+                departmentRepo.update(department,session);
             }
 
             employeeRepo.update(employee, session);
