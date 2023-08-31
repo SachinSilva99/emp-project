@@ -78,15 +78,21 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteEmployee(String id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable String id) {
         try {
+            System.out.println(id);
             employeeService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ConstraintViolationException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            e.printStackTrace();
+            return new ResponseEntity<>("employee in use ",HttpStatus.CONFLICT);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
     }
 }

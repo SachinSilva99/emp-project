@@ -34,8 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
-    @Autowired
-    private DepartmentMapper departmentMapper;
+
     @Autowired
     private FactoryConfiguration factoryConfiguration;
     @Autowired
@@ -120,14 +119,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void delete(String id) {
         Session session = factoryConfiguration.getSession();
-        Transaction transaction = session.beginTransaction();
         Optional<Employee> byPk = employeeRepo.findByPk(id, session);
         if (byPk.isEmpty()) {
             throw new NotFoundException(id + " employee not found");
         }
+        Transaction transaction = session.beginTransaction();
+
         try {
-            transaction.begin();
             employeeRepo.delete(byPk.get(), session);
+            transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
             throw new ConstraintViolationException(id + " employee in use");

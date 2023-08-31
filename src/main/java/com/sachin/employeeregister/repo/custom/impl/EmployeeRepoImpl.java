@@ -41,6 +41,7 @@ public class EmployeeRepoImpl implements EmployeeRepo {
         try {
             session.delete(employee);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ConstraintViolationException("Did not delete customer");
         }
     }
