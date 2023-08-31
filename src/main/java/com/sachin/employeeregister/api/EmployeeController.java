@@ -30,9 +30,13 @@ public class EmployeeController {
             @RequestPart String email,
             @RequestPart(required = false) byte[] profile,
             @PathVariable(required = false) Long departmentId) {
+
         try {
-            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
-            System.out.println(departmentId);
+            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email);
+            if (profile != null) {
+                dto.setProfile(profile);
+            }
+
             employeeService.createEmployee(dto, departmentId);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {
@@ -49,7 +53,10 @@ public class EmployeeController {
             @PathVariable(required = false) String departmentId
     ) {
         try {
-            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
+            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email);
+            if (profile != null) {
+                dto.setProfile(profile);
+            }
 
             Long depId = null;
             if (departmentId != null) {
