@@ -4,10 +4,14 @@ package com.sachin.employeeregister.api;
 import com.mysql.cj.log.Log;
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
+import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
+import com.sachin.employeeregister.repo.ConstraintViolationException;
 import com.sachin.employeeregister.service.EmployeeService;
 import com.sachin.employeeregister.service.exception.DuplicateException;
+import com.sachin.employeeregister.service.exception.NotFoundException;
 import com.sachin.employeeregister.service.exception.UpdateFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/emp")
@@ -23,7 +28,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void saveEmp(
+    public ResponseEntity<String> saveEmp(
             @RequestPart String id,
             @RequestPart String name,
             @RequestPart String email,
@@ -31,45 +36,61 @@ public class EmployeeController {
     ) {
         try {
             EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
-            // Decode the base64 profile data
-
-            String encodedString = Base64.getEncoder().encodeToString(profile);
-            System.out.println(encodedString);
             employeeService.createEmployee(dto);
-            ResponseEntity.ok();
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {
-            e.printStackTrace();
-            ResponseEntity.badRequest();
+            return new ResponseEntity<>(id + " employee Already exists", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping(value = {"/{id}", "/{id}/{departmentId}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateEmployee(
-            @RequestBody EmployeeRequestDTO dto,
-            @PathVariable String id,
+    @PutMapping(value = {"/", "/{departmentId}"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updateEmployee(
+            @RequestPart String id,
+            @RequestPart String name,
+            @RequestPart String email,
+            @RequestPart(required = false) byte[] profile,
             @PathVariable(required = false) String departmentId
     ) {
         try {
+            EmployeeRequestDTO dto = new EmployeeRequestDTO(id, name, email, profile);
+
             Long depId = null;
             if (departmentId != null) {
                 depId = Long.valueOf(departmentId);
             }
             employeeService.updateEmployee(dto, id, depId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (UpdateFailedException e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(id + " not found", HttpStatus.NOT_FOUND);
         }
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmp(@PathVariable String id) {
-
-        return null;
+    public ResponseEntity<EmployeeResponseDTO> getEmp(@PathVariable String id) {
+        Optional<EmployeeResponseDTO> employee = employeeService.getEmployee(id);
+        return employee.map(
+                        employeeResponseDTO -> new ResponseEntity<>(employeeResponseDTO, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND)
+                );
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmp() {
-        return null;
+    public ResponseEntity<List<EmployeeResponseDTO>> getAllEmp() {
+        return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
+    @DeleteMapping
+    public ResponseEntity<String> deleteEmployee(String id) {
+        try {
+            employeeService.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

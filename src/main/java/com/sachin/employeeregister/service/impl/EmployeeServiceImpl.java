@@ -70,41 +70,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void updateEmployee(EmployeeRequestDTO dto, String id, Long departmentId) throws UpdateFailedException {
+    public void updateEmployee(EmployeeRequestDTO dto, String id, Long departmentId) throws UpdateFailedException, NotFoundException {
         Session session = factoryConfiguration.getSession();
-
-        EmployeeDTO employeeDTO = new EmployeeDTO(dto.getId(), dto.getName(), dto.getEmail(), dto.getProfile());
-
-        if (departmentId != null) {
-            Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
-            if (byPk.isPresent()) {
-                System.out.println("employee has a dep");
-                Department department = byPk.get();
-                DepartmentDTO departmentDto = departmentMapper.toDepartmentDto(department);
-                employeeDTO.setDepartmentDTO(departmentDto);
-            }
-        }
-        System.out.println(departmentId == null);
         Transaction transaction = session.beginTransaction();
 
-        Optional<Employee> existByPk = employeeRepo.findByPk(employeeDTO.getId(), session);
+        Optional<Employee> existByPk = employeeRepo.findByPk(id, session);
         if (existByPk.isEmpty()) {
-            throw new NotFoundException(employeeDTO.getId() + employeeDTO.getName() + " not found");
+            System.out.println("empty");
+            throw new NotFoundException(id + " not found");
         }
 
         try {
-            Employee updatedEmp = employeeMapper.toEmployee(employeeDTO);
             Employee employee = existByPk.get();
-            employee.setName(updatedEmp.getName());
-            employee.setEmail(updatedEmp.getEmail());
-            employee.setProfile(updatedEmp.getProfile());
-            employee.setDepartment(updatedEmp.getDepartment());
+            employee.setName(dto.getName());
+            employee.setEmail(dto.getEmail());
+            employee.setProfile(dto.getProfile());
+
+            if (departmentId != null) {
+                Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
+                byPk.ifPresent(employee::setDepartment);
+            }
+
             employeeRepo.update(employee, session);
             transaction.commit();
             employeeMapper.toEmployeeResponseDto(employee);
         } catch (Exception e) {
             transaction.rollback();
-            throw new UpdateFailedException(employeeDTO + " failed to update");
+            throw new UpdateFailedException(id + " failed to update");
         } finally {
             session.close();
         }
