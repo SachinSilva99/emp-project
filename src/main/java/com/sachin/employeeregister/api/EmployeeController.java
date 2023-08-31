@@ -1,8 +1,6 @@
 package com.sachin.employeeregister.api;
 
 
-import com.mysql.cj.log.Log;
-import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.EmployeeRequestDTO;
 import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
 import com.sachin.employeeregister.repo.ConstraintViolationException;
@@ -16,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 

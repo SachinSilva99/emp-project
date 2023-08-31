@@ -21,5 +21,4 @@ public class EmployeeRequestDTO {
         this.name = name;
         this.email = email;
     }
-
 }
