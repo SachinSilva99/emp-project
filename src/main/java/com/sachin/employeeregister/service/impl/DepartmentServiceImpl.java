@@ -1,10 +1,8 @@
 package com.sachin.employeeregister.service.impl;
 
 import com.sachin.employeeregister.dto.DepartmentDTO;
-import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.DepartmentRequestDTO;
 import com.sachin.employeeregister.dto.response.DepartmentResponseDTO;
-import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
 import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.repo.custom.DepartmentRepo;
 import com.sachin.employeeregister.service.DepartmentService;
@@ -59,21 +57,18 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO) throws UpdateFailedException {
+    public DepartmentResponseDTO updateDepartment(DepartmentRequestDTO departmentRequestDTO) throws UpdateFailedException {
         Session session = factoryConfiguration.getSession();
-        Optional<Department> existByPk = departmentRepo.findByPk(departmentDTO.getId(), session);
+        Optional<Department> existByPk = departmentRepo.findByPk(departmentRequestDTO.getId(), session);
         if (existByPk.isEmpty()) {
-            throw new NotFoundException(departmentDTO.getId() + " not found");
+            throw new NotFoundException(departmentRequestDTO.getId() + " not found");
         }
         Transaction transaction = session.beginTransaction();
 
         try {
-            Department updatedDep = departmentMapper.toDepartment(departmentDTO);
 
             Department department = existByPk.get();
-            department.setEmployeeList(updatedDep.getEmployeeList());
-            department.setName(updatedDep.getName());
-
+            department.setName(departmentRequestDTO.getName());
             departmentRepo.update(department, session);
             transaction.commit();
             return departmentMapper.toDepartmentResponseDto(department);

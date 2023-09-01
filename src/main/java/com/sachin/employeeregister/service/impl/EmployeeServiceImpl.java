@@ -88,9 +88,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         try {
             Employee employee = existByPk.get();
-            employee.setName(dto.getName());
-            employee.setEmail(dto.getEmail());
+            if (dto.getName() != null) {
+                employee.setName(dto.getName());
+            }
+            if (dto.getEmail() != null) {
+                employee.setEmail(dto.getEmail());
+            }
             employee.setProfile(dto.getProfile());
+
 
             if (departmentId != null) {
                 Optional<Department> byPk = departmentRepo.findByPk(departmentId, session);
@@ -99,7 +104,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 }
                 Department department = byPk.get();
                 employee.setDepartment(department);
-                departmentRepo.update(department,session);
+                departmentRepo.update(department, session);
             }
 
             employeeRepo.update(employee, session);
@@ -149,6 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(employee -> employeeMapper.toEmployeeResponseDto(employee))
                 .collect(Collectors.toList());
         session.close();
+
         return employeeDTOS;
     }
 }

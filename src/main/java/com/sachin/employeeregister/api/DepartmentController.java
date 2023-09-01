@@ -32,9 +32,10 @@ public class DepartmentController {
         }
     }
 
-    @GetMapping("/{departmentId}")
-    public ResponseEntity<DepartmentResponseDTO> getEmployee(@PathVariable Long departmentId) {
+    @GetMapping(value = "/{departmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DepartmentResponseDTO> getDepartment(@PathVariable Long departmentId) {
         Optional<DepartmentResponseDTO> department = departmentService.getDepartment(departmentId);
+
         return department
                 .map(departmentResponseDTO -> new ResponseEntity<>(departmentResponseDTO, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -64,7 +65,7 @@ public class DepartmentController {
         }
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DepartmentResponseDTO>> findAll() {
         return new ResponseEntity<>(departmentService.getAllEmployees(), HttpStatus.OK);
     }

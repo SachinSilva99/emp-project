@@ -44,8 +44,8 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
         employeeResponseDTO.setId(employeeResponseDTO.getId());
         employeeResponseDTO.setName(employee.getName());
-        employee.setEmail(employee.getEmail());
-        employee.setProfile(employee.getProfile());
+        employeeResponseDTO.setEmail(employee.getEmail());
+        employeeResponseDTO.setProfile(employee.getProfile());
         if (employee.getDepartment() != null) {
             employee.setDepartment(employee.getDepartment());
         }

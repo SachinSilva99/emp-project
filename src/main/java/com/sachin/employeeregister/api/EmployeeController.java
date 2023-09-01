@@ -40,6 +40,8 @@ public class EmployeeController {
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {
             return new ResponseEntity<>(id + " employee Already exists", HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(departmentId + " department Id not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,6 +84,7 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<EmployeeResponseDTO>> getAllEmp() {
+
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
