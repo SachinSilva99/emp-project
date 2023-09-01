@@ -26,5 +26,6 @@ public class Employee implements SuperEntity {
     private byte[] profile;
 
     @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 }

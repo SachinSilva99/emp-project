@@ -14,11 +14,11 @@ import java.util.Optional;
 public interface DepartmentService {
     void createDepartment(DepartmentRequestDTO departmentDTO);
 
-    DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO, Long id) throws UpdateFailedException;
+    DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO) throws UpdateFailedException;
 
-    Optional<EmployeeDTO> getDepartment(Long id);
+    Optional<DepartmentResponseDTO> getDepartment(Long id);
 
     void delete(Long id);
 
-    List<EmployeeDTO> getAllEmployees();
+    List<DepartmentResponseDTO> getAllEmployees();
 }

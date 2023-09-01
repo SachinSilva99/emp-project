@@ -16,8 +16,10 @@ import java.util.List;
 public class Department implements SuperEntity {
     @Id
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Employee> employeeList = new ArrayList<>();
 }

@@ -24,7 +24,8 @@ public class DepartmentRepoImpl implements DepartmentRepo {
             return department;
         } catch (Exception e) {
             throw new ConstraintViolationException("Did not saved department");
-        }    }
+        }
+    }
 
     @Override
     public Department update(Department department, Session session) throws ConstraintViolationException {

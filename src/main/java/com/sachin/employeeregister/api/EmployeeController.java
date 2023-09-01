@@ -36,7 +36,6 @@ public class EmployeeController {
             if (profile != null) {
                 dto.setProfile(profile);
             }
-
             employeeService.createEmployee(dto, departmentId);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (DuplicateException e) {

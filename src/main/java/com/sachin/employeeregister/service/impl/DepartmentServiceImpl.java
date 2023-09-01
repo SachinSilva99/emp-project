@@ -4,10 +4,12 @@ import com.sachin.employeeregister.dto.DepartmentDTO;
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.request.DepartmentRequestDTO;
 import com.sachin.employeeregister.dto.response.DepartmentResponseDTO;
+import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
 import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.repo.custom.DepartmentRepo;
 import com.sachin.employeeregister.service.DepartmentService;
 import com.sachin.employeeregister.service.exception.DuplicateException;
+import com.sachin.employeeregister.service.exception.InUseException;
 import com.sachin.employeeregister.service.exception.NotFoundException;
 import com.sachin.employeeregister.service.exception.UpdateFailedException;
 import com.sachin.employeeregister.util.FactoryConfiguration;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class DepartmentServiceImpl implements DepartmentService {
@@ -53,13 +56,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         } finally {
             session.close();
         }
-
     }
 
     @Override
-    public DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO, Long id) throws UpdateFailedException {
+    public DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO) throws UpdateFailedException {
         Session session = factoryConfiguration.getSession();
-        Optional<Department> existByPk = departmentRepo.findByPk(id, session);
+        Optional<Department> existByPk = departmentRepo.findByPk(departmentDTO.getId(), session);
         if (existByPk.isEmpty()) {
             throw new NotFoundException(departmentDTO.getId() + " not found");
         }
@@ -78,25 +80,50 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         } catch (Exception e) {
             transaction.rollback();
-            e.printStackTrace();
-            throw new UpdateFailedException("");
+            throw new UpdateFailedException(e.getMessage());
         } finally {
             session.close();
         }
     }
 
     @Override
-    public Optional<EmployeeDTO> getDepartment(Long id) {
-        return Optional.empty();
+    public Optional<DepartmentResponseDTO> getDepartment(Long id) {
+        Session session = factoryConfiguration.getSession();
+        Optional<Department> byPk = departmentRepo.findByPk(id, session);
+        session.close();
+        return byPk.map(department -> departmentMapper.toDepartmentResponseDto(department));
     }
 
     @Override
     public void delete(Long id) {
+        Session session = factoryConfiguration.getSession();
+        Optional<Department> byPk = departmentRepo.findByPk(id, session);
+        if (byPk.isEmpty()) {
+            throw new NotFoundException(id + " not found");
+        }
+        Department department = byPk.get();
+        Transaction transaction = session.beginTransaction();
+
+        try {
+            departmentRepo.delete(department, session);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new InUseException(id + " in use");
+        } finally {
+            session.close();
+        }
 
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmployees() {
-        return null;
+    public List<DepartmentResponseDTO> getAllEmployees() {
+        Session session = factoryConfiguration.getSession();
+        List<DepartmentResponseDTO> departmentResponseDTOS = departmentRepo.findAll(session)
+                .stream()
+                .map(department -> departmentMapper.toDepartmentResponseDto(department))
+                .collect(Collectors.toList());
+        session.close();
+        return departmentResponseDTOS;
     }
 }
