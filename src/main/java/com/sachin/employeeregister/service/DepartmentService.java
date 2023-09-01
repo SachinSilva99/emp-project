@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DepartmentService {
-    void createDepartment(DepartmentRequestDTO departmentDTO);
+    void createDepartment(DepartmentRequestDTO departmentRequestDTO);
 
-    DepartmentResponseDTO updateDepartment(DepartmentDTO departmentDTO) throws UpdateFailedException;
+    DepartmentResponseDTO updateDepartment(DepartmentRequestDTO departmentRequestDTO) throws UpdateFailedException;
 
     Optional<DepartmentResponseDTO> getDepartment(Long id);
 
