@@ -20,6 +20,6 @@ public class Department implements SuperEntity {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Employee> employeeList = new ArrayList<>();
 }
