@@ -1,7 +1,9 @@
 package com.sachin.employeeregister.util.mapper.impl;
 
+import com.sachin.employeeregister.dto.DepartmentDTO;
 import com.sachin.employeeregister.dto.EmployeeDTO;
 import com.sachin.employeeregister.dto.response.EmployeeResponseDTO;
+import com.sachin.employeeregister.entity.Department;
 import com.sachin.employeeregister.entity.Employee;
 import com.sachin.employeeregister.util.mapper.DepartmentMapper;
 import com.sachin.employeeregister.util.mapper.EmployeeMapper;
@@ -20,9 +22,9 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         employeeDTO.setName(emp.getName());
         employeeDTO.setEmail(emp.getEmail());
         employeeDTO.setProfile(emp.getProfile());
-        if (emp.getDepartment() != null) {
+      /*  if (emp.getDepartment() != null) {
             employeeDTO.setDepartmentDTO(departmentMapper.toDepartmentDto(emp.getDepartment()));
-        }
+        }*/
         return employeeDTO;
     }
 
@@ -33,22 +35,19 @@ public class EmployeeMapperImpl implements EmployeeMapper {
         employee.setName(empDto.getName());
         employee.setEmail(empDto.getEmail());
         employee.setProfile(empDto.getProfile());
-        if (empDto.getDepartmentDTO() != null) {
+       /* if (empDto.getDepartmentDTO() != null) {
             employee.setDepartment(departmentMapper.toDepartment(empDto.getDepartmentDTO()));
-        }
+        }*/
         return employee;
     }
 
     @Override
     public EmployeeResponseDTO toEmployeeResponseDto(Employee employee) {
         EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
-        employeeResponseDTO.setId(employeeResponseDTO.getId());
+        employeeResponseDTO.setId(employee.getId());
         employeeResponseDTO.setName(employee.getName());
         employeeResponseDTO.setEmail(employee.getEmail());
         employeeResponseDTO.setProfile(employee.getProfile());
-        if (employee.getDepartment() != null) {
-            employee.setDepartment(employee.getDepartment());
-        }
         return employeeResponseDTO;
     }
 }

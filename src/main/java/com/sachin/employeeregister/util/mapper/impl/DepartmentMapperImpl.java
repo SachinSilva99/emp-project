@@ -18,16 +18,16 @@ public class DepartmentMapperImpl implements DepartmentMapper {
     @Override
     public DepartmentDTO toDepartmentDto(Department dp) {
         DepartmentDTO departmentDTO = new DepartmentDTO();
-        departmentDTO.setId(departmentDTO.getId());
+        departmentDTO.setId(dp.getId());
         departmentDTO.setName(dp.getName());
-        if (dp.getEmployeeList() != null) {
+       /* if (dp.getEmployeeList() != null) {
             departmentDTO.setEmployeeDTOS(
                     dp.getEmployeeList()
                             .stream()
                             .map(employee -> employeeMapper.toEmployeeDto(employee))
                             .collect(Collectors.toList())
             );
-        }
+        }*/
         return departmentDTO;
     }
 
@@ -36,9 +36,9 @@ public class DepartmentMapperImpl implements DepartmentMapper {
         DepartmentResponseDTO departmentResponseDTO = new DepartmentResponseDTO();
         department.setId(department.getId());
         department.setName(department.getName());
-        if (department.getEmployeeList() != null) {
+      /*  if (department.getEmployeeList() != null) {
             department.setEmployeeList(department.getEmployeeList());
-        }
+        }*/
         return departmentResponseDTO;
     }
 
@@ -47,12 +47,12 @@ public class DepartmentMapperImpl implements DepartmentMapper {
         Department department = new Department();
         department.setId(departmentDTO.getId());
         department.setName(departmentDTO.getName());
-        if (departmentDTO.getEmployeeDTOS() != null) {
+    /*    if (departmentDTO.getEmployeeDTOS() != null) {
             department.setEmployeeList(
                     departmentDTO.getEmployeeDTOS()
                             .stream().map(employeeDTO -> employeeMapper.toEmployee(employeeDTO))
                             .collect(Collectors.toList()));
-        }
+        }*/
         return department;
     }
 }

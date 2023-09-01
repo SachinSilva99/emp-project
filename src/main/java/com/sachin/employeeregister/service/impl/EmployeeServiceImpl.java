@@ -33,6 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private DepartmentMapper departmentMapper;
 
 
     @Autowired
@@ -109,7 +111,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeRepo.update(employee, session);
             transaction.commit();
-            employeeMapper.toEmployeeResponseDto(employee);
         } catch (Exception e) {
             transaction.rollback();
             throw new UpdateFailedException(id + " failed to update");
@@ -123,7 +124,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         Session session = factoryConfiguration.getSession();
         Optional<Employee> byPk = employeeRepo.findByPk(id, session);
         session.close();
-        return byPk.map(employee -> employeeMapper.toEmployeeResponseDto(employee));
+        if (byPk.isEmpty()) {
+            return Optional.empty();
+        }
+        Employee employee = byPk.get();
+        EmployeeResponseDTO employeeResponseDto = employeeMapper.toEmployeeResponseDto(employee);
+        if (employee.getDepartment() != null) {
+            employeeResponseDto.setDepartmentDTO(departmentMapper.toDepartmentDto(employee.getDepartment()));
+        }
+        return Optional.of(employeeResponseDto);
     }
 
     @Override
