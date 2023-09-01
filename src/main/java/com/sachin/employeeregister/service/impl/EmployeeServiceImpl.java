@@ -162,8 +162,15 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .stream()
                 .map(employee -> employeeMapper.toEmployeeResponseDto(employee))
                 .collect(Collectors.toList());
+        for (EmployeeResponseDTO employeeDTO : employeeDTOS) {
+            Optional<Employee> byPk = employeeRepo.findByPk(employeeDTO.getId(), session);
+            if (byPk.isPresent()) {
+                if (byPk.get().getDepartment() != null) {
+                    employeeDTO.setDepartmentDTO(departmentMapper.toDepartmentDto(byPk.get().getDepartment()));
+                }
+            }
+        }
         session.close();
-
         return employeeDTOS;
     }
 }
